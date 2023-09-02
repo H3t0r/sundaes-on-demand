@@ -29,7 +29,8 @@ describe('Summary Form', () => {
     expect(checkbox).toBeChecked()
     expect(button).toBeEnabled()
   })
-  test('Confirm Order button is disabled when checkbox is unchecked', async () => {
+
+  test('Confirm Order button is disabled when checkbox gets unchecked', async () => {
     const user = userEvent.setup()
     render(<SummaryForm />)
 
@@ -43,5 +44,25 @@ describe('Summary Form', () => {
 
     expect(checkbox).not.toBeChecked()
     expect(button).toBeDisabled()
+  })
+
+  test('Popover gets rendered on hover', async () => {
+    const user = userEvent.setup()
+    render(<SummaryForm />)
+
+    const nullPopover = screen.queryByText(
+      /no ice cream will actually be delivered/i,
+    )
+    expect(nullPopover).not.toBeInTheDocument()
+
+    const checkbox = screen.getByRole('checkbox', {
+      name: /terms and conditions/i,
+    })
+    await user.hover(checkbox)
+    const popover = screen.getByText(/no ice cream will actually be delivered/i)
+    expect(popover).toBeInTheDocument()
+
+    await user.unhover(checkbox)
+    expect(popover).not.toBeInTheDocument()
   })
 })

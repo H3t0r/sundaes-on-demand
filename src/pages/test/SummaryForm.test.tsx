@@ -1,5 +1,6 @@
 import {fireEvent, render, screen} from '@testing-library/react'
 import SummaryForm from '../SummaryForm'
+import userEvent from '@testing-library/user-event'
 
 describe('Summary Form', () => {
   test('Confirm Order button is disabled and checkbox is unchecked by default', () => {
@@ -14,7 +15,8 @@ describe('Summary Form', () => {
     expect(button).toBeDisabled()
   })
 
-  test('Confirm Order button is enabled when checkbox is checked', () => {
+  test('Confirm Order button is enabled when checkbox is checked', async () => {
+    const user = userEvent.setup()
     render(<SummaryForm />)
 
     const checkbox = screen.getByRole('checkbox', {
@@ -22,12 +24,13 @@ describe('Summary Form', () => {
     })
     const button = screen.getByRole('button', {name: /confirm order/i})
 
-    fireEvent.click(checkbox)
+    await user.click(checkbox)
 
     expect(checkbox).toBeChecked()
     expect(button).toBeEnabled()
   })
-  test('Confirm Order button is disabled when checkbox is unchecked', () => {
+  test('Confirm Order button is disabled when checkbox is unchecked', async () => {
+    const user = userEvent.setup()
     render(<SummaryForm />)
 
     const checkbox = screen.getByRole('checkbox', {
@@ -35,8 +38,8 @@ describe('Summary Form', () => {
     })
     const button = screen.getByRole('button', {name: /confirm order/i})
 
-    fireEvent.click(checkbox)
-    fireEvent.click(checkbox)
+    await user.click(checkbox)
+    await user.click(checkbox)
 
     expect(checkbox).not.toBeChecked()
     expect(button).toBeDisabled()

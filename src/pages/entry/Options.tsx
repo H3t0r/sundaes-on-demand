@@ -1,5 +1,6 @@
 import React from 'react'
 import ScoopOption from './ScoopOption'
+import ToppingOption from './ToppingOption'
 
 type Option = {imagePath: string; name: string}
 
@@ -24,10 +25,12 @@ function Options({type}: Props) {
       })
   }, [type])
 
+  const Option = type === 'scoops' ? ScoopOption : ToppingOption
+
   return (
     <>
       {options.map(option => (
-        <ScoopOption
+        <Option
           imagePath={option.imagePath}
           key={option.name}
           name={option.name}

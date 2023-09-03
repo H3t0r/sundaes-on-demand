@@ -1,6 +1,7 @@
 import React from 'react'
 import ScoopOption from './ScoopOption'
 import ToppingOption from './ToppingOption'
+import Alert from '@mui/material/Alert'
 
 type Option = {imagePath: string; name: string}
 
@@ -16,14 +17,21 @@ interface Props {
 
 function Options({type}: Props) {
   const [options, setOptions] = React.useState<Option[]>([])
+  const [error, setError] = React.useState<Error | null>(null)
 
   React.useEffect(() => {
     getOptions(type)
       .then(response => setOptions(response))
-      .catch(error => {
-        // TODO: handle error
-      })
+      .catch((error: Error) => setError(error))
   }, [type])
+
+  if (error) {
+    return (
+      <Alert severity="error">
+        An unexpected error ocurred. Please try again later.
+      </Alert>
+    )
+  }
 
   const Option = type === 'scoops' ? ScoopOption : ToppingOption
 

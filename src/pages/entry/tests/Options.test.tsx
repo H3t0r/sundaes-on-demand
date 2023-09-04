@@ -1,7 +1,6 @@
+import userEvent from '@testing-library/user-event'
 import {render, screen} from '../../../test-utils/testing-library-utils'
 import Options from '../Options'
-import userEvent from '@testing-library/user-event'
-import {OrderDetailsProvider} from '../../../context/OrderDetails'
 
 describe('Options', () => {
   test('Displays image for each scoop options from server', async () => {
@@ -49,5 +48,32 @@ describe('Options', () => {
     await user.clear(chocolateInput)
     await user.type(chocolateInput, '2')
     expect(subtotal).toHaveTextContent('6.00')
+  })
+
+  test('Update toppings total when toppings change', async () => {
+    const user = userEvent.setup()
+    render(<Options type="toppings" />)
+
+    const subtotal = screen.getByText('Toppings total: $', {exact: false})
+    const cherriesCheckbox = await screen.findByRole('checkbox', {
+      name: /cherries/i,
+    })
+    const hotFudgeCheckbox = await screen.findByRole('checkbox', {
+      name: /hot fudge/i,
+    })
+
+    expect(subtotal).toHaveTextContent('0.00')
+
+    await user.click(cherriesCheckbox)
+    expect(cherriesCheckbox).toBeChecked()
+    expect(subtotal).toHaveTextContent('1.50')
+
+    await user.click(hotFudgeCheckbox)
+    expect(hotFudgeCheckbox).toBeChecked()
+    expect(subtotal).toHaveTextContent('3.00')
+
+    await user.click(hotFudgeCheckbox)
+    expect(hotFudgeCheckbox).not.toBeChecked()
+    expect(subtotal).toHaveTextContent('1.50')
   })
 })

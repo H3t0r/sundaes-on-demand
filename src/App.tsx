@@ -4,7 +4,9 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import CssBaseline from '@mui/material/CssBaseline'
 import {ThemeProvider, createTheme} from '@mui/material/styles'
-import OrderSummary from './pages/OrderSummary'
+import OrderEntry from './pages/entry/OrderEntry'
+import Container from '@mui/material/Container'
+import {OrderDetailsProvider} from './context/OrderDetails'
 
 const defaultTheme = createTheme({
   palette: {
@@ -16,7 +18,11 @@ function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <OrderSummary />
+      <Container>
+        <OrderDetailsProvider>
+          <OrderEntry />
+        </OrderDetailsProvider>
+      </Container>
     </ThemeProvider>
   )
 }

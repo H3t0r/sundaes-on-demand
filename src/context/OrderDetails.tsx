@@ -16,9 +16,9 @@ const initialState: OrderDetailsState = {scoops: {}, toppings: {}}
 export function useOrderDetails() {
   const ctx = React.useContext(OrderDetails)
 
-  if (ctx === null) {
+  if (!ctx) {
     throw new Error(
-      'useOrderDetails must be used inside a OrderDetailsProvider',
+      'useOrderDetails must be called from within an OrderDetailsProvider',
     )
   }
 

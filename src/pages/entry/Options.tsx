@@ -13,8 +13,11 @@ import Grid from '@mui/material/Grid'
 
 type Option = {imagePath: string; name: string}
 
-async function getOptions(type: Props['type']): Promise<Option[]> {
-  const response = await fetch(`http://localhost:3030/${type}`)
+async function getOptions(
+  type: Props['type'],
+  opts: RequestInit,
+): Promise<Option[]> {
+  const response = await fetch(`http://localhost:3030/${type}`, opts)
 
   return response.json()
 }
@@ -29,9 +32,17 @@ function Options({type}: Props) {
   const {totals} = useOrderDetails()
 
   React.useEffect(() => {
-    getOptions(type)
+    const controller = new AbortController()
+
+    getOptions(type, {signal: controller.signal})
       .then(response => setOptions(response))
-      .catch((error: Error) => setError(error))
+      .catch((error: Error) => {
+        if (error.name !== 'CanceledError') {
+          setError(error)
+        }
+      })
+
+    return () => controller.abort()
   }, [type])
 
   if (error) {

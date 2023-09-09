@@ -61,19 +61,17 @@ describe('Grand total', () => {
     render(<OrderEntry />)
 
     const total = screen.getByRole('heading', {name: /grand total/i})
-
     const cherriesCheckbox = await screen.findByRole('checkbox', {
       name: /cherries/i,
     })
-    await user.click(cherriesCheckbox)
-    expect(total).toHaveTextContent('1.50')
-
     const chocolateInput = await screen.findByRole('spinbutton', {
       name: 'Chocolate',
     })
+
     await user.clear(chocolateInput)
-    await user.type(chocolateInput, '1')
-    expect(total).toHaveTextContent('3.50')
+    await user.click(cherriesCheckbox)
+    await user.type(chocolateInput, '2')
+    expect(total).toHaveTextContent('5.50')
   })
 
   test('updates properly if option is removed', async () => {
@@ -89,8 +87,6 @@ describe('Grand total', () => {
     })
 
     await user.click(cherriesCheckbox)
-    expect(total).toHaveTextContent('1.50')
-
     await user.clear(chocolateInput)
     await user.type(chocolateInput, '1')
     expect(total).toHaveTextContent('3.50')

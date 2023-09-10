@@ -1,8 +1,13 @@
-import {useOrderDetails} from '../context/OrderDetails'
-import {formatCurrency} from '../utilities'
+import {useOrderDetails} from '../../context/OrderDetails'
+import {OrderPhase} from '../../types'
+import {formatCurrency} from '../../utilities'
 import SummaryForm from './SummaryForm'
 
-function OrderSummary() {
+interface Props {
+  onConfirm?: React.Dispatch<React.SetStateAction<OrderPhase>>
+}
+
+function OrderSummary(props: Props) {
   const {optionCounts, totals} = useOrderDetails()
   const scoops = Object.entries(optionCounts.scoops)
   const toppings = Object.keys(optionCounts.toppings)
@@ -24,7 +29,8 @@ function OrderSummary() {
           <li key={key}>{key}</li>
         ))}
       </ul>
-      <SummaryForm />
+      <h2>Total: {formatCurrency(totals.scoops + totals.toppings)}</h2>
+      <SummaryForm onConfirm={props.onConfirm} />
     </div>
   )
 }

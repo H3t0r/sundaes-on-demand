@@ -11,7 +11,6 @@ type OrderDetailsValue = {
 }
 
 const OrderDetails = React.createContext<OrderDetailsValue | null>(null)
-const initialState: OrderDetailsState = {scoops: {}, toppings: {}}
 
 export function useOrderDetails() {
   const ctx = React.useContext(OrderDetails)
@@ -30,8 +29,10 @@ interface Props {
 }
 
 export function OrderDetailsProvider(props: Props) {
-  const [optionCounts, setOptionCounts] =
-    React.useState<OrderDetailsState>(initialState)
+  const [optionCounts, setOptionCounts] = React.useState<OrderDetailsState>({
+    scoops: {},
+    toppings: {},
+  })
 
   const calculateTotal = (type: OptionType) => {
     const countsArray = Object.values(optionCounts[type])
@@ -40,7 +41,7 @@ export function OrderDetailsProvider(props: Props) {
     return totalCount * PRICE_PER_ITEM[type]
   }
 
-  const resetOrder = () => setOptionCounts(initialState)
+  const resetOrder = () => setOptionCounts({scoops: {}, toppings: {}})
 
   const updateOptionCount = (name: string, count: number, type: OptionType) => {
     const newOptionCounts: OrderDetailsState = {...optionCounts}

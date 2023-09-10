@@ -5,8 +5,13 @@ import FormGroup from '@mui/material/FormGroup'
 import Popover from '@mui/material/Popover'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
+import {OrderPhase} from '../../types'
 
-function SummaryForm() {
+interface Props {
+  onConfirm?: React.Dispatch<React.SetStateAction<OrderPhase>>
+}
+
+function SummaryForm(props: Props) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
   const [isDisabled, setIsDisabled] = React.useState(true)
 
@@ -43,7 +48,11 @@ function SummaryForm() {
           No ice cream will actually be delivered
         </Typography>
       </Popover>
-      <Button disabled={isDisabled} variant="contained">
+      <Button
+        disabled={isDisabled}
+        onClick={() => props.onConfirm?.('completed')}
+        variant="contained"
+      >
         Confirm Order
       </Button>
     </>

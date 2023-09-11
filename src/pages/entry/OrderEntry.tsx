@@ -6,7 +6,7 @@ import Button from '@mui/material/Button'
 import {OrderPhase} from '../../types'
 
 interface Props {
-  onConfirm?: React.Dispatch<React.SetStateAction<OrderPhase>>
+  onConfirm: React.Dispatch<React.SetStateAction<OrderPhase>>
 }
 
 function OrderEntry(props: Props) {
@@ -19,7 +19,12 @@ function OrderEntry(props: Props) {
       <Typography variant="h2">
         Grand total: {formatCurrency(totals.scoops + totals.toppings)}
       </Typography>
-      <Button onClick={() => props.onConfirm?.('review')}>Order Sundae!</Button>
+      <Button
+        disabled={totals.scoops <= 0}
+        onClick={() => props.onConfirm('review')}
+      >
+        Order Sundae!
+      </Button>
     </>
   )
 }

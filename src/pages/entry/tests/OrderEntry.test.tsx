@@ -19,79 +19,103 @@ describe('Order Entry', () => {
       ),
     )
 
-    render(<OrderEntry />)
+    render(<OrderEntry onConfirm={jest.fn()} />)
 
     await waitFor(async () => {
       const alerts = await screen.findAllByRole('alert')
       expect(alerts).toHaveLength(2)
     })
   })
-})
 
-describe('Grand total', () => {
-  test('Starts at $0.00', () => {
-    render(<OrderEntry />)
+  describe('Order button', () => {
+    test('Disabled if no scoops ordered', async () => {
+      const user = userEvent.setup()
+      render(<OrderEntry onConfirm={jest.fn()} />)
 
-    const total = screen.getByRole('heading', {name: /grand total/i})
-    expect(total).toHaveTextContent('0.00')
+      const chocolateInput = await screen.findByRole('spinbutton', {
+        name: 'Chocolate',
+      })
+      const orderButton = screen.getByRole('button', {name: /order sundae/i})
+
+      expect(orderButton).toBeDisabled()
+
+      await user.clear(chocolateInput)
+      await user.type(chocolateInput, '1')
+
+      expect(orderButton).toBeEnabled()
+
+      await user.clear(chocolateInput)
+      await user.type(chocolateInput, '0')
+
+      expect(orderButton).toBeDisabled()
+    })
   })
 
-  test('updates properly if scoop is added first', async () => {
-    const user = userEvent.setup()
-    render(<OrderEntry />)
+  describe('Grand total', () => {
+    test('Starts at $0.00', () => {
+      render(<OrderEntry onConfirm={jest.fn()} />)
 
-    const total = screen.getByRole('heading', {name: /grand total/i})
-    const chocolateInput = await screen.findByRole('spinbutton', {
-      name: 'Chocolate',
-    })
-    const cherriesCheckbox = await screen.findByRole('checkbox', {
-      name: /cherries/i,
+      const total = screen.getByRole('heading', {name: /grand total/i})
+      expect(total).toHaveTextContent('0.00')
     })
 
-    await user.clear(chocolateInput)
-    await user.type(chocolateInput, '1')
-    expect(total).toHaveTextContent('2.00')
+    test('updates properly if scoop is added first', async () => {
+      const user = userEvent.setup()
+      render(<OrderEntry onConfirm={jest.fn()} />)
 
-    await user.click(cherriesCheckbox)
-    expect(total).toHaveTextContent('3.50')
-  })
+      const total = screen.getByRole('heading', {name: /grand total/i})
+      const chocolateInput = await screen.findByRole('spinbutton', {
+        name: 'Chocolate',
+      })
+      const cherriesCheckbox = await screen.findByRole('checkbox', {
+        name: /cherries/i,
+      })
 
-  test('updates properly if topping is added first', async () => {
-    const user = userEvent.setup()
-    render(<OrderEntry />)
+      await user.clear(chocolateInput)
+      await user.type(chocolateInput, '1')
+      expect(total).toHaveTextContent('2.00')
 
-    const total = screen.getByRole('heading', {name: /grand total/i})
-    const cherriesCheckbox = await screen.findByRole('checkbox', {
-      name: /cherries/i,
-    })
-    const chocolateInput = await screen.findByRole('spinbutton', {
-      name: 'Chocolate',
-    })
-
-    await user.clear(chocolateInput)
-    await user.click(cherriesCheckbox)
-    await user.type(chocolateInput, '2')
-    expect(total).toHaveTextContent('5.50')
-  })
-
-  test('updates properly if option is removed', async () => {
-    const user = userEvent.setup()
-    render(<OrderEntry />)
-
-    const total = screen.getByRole('heading', {name: /grand total/i})
-    const chocolateInput = await screen.findByRole('spinbutton', {
-      name: 'Chocolate',
-    })
-    const cherriesCheckbox = await screen.findByRole('checkbox', {
-      name: /cherries/i,
+      await user.click(cherriesCheckbox)
+      expect(total).toHaveTextContent('3.50')
     })
 
-    await user.click(cherriesCheckbox)
-    await user.clear(chocolateInput)
-    await user.type(chocolateInput, '1')
-    expect(total).toHaveTextContent('3.50')
+    test('updates properly if topping is added first', async () => {
+      const user = userEvent.setup()
+      render(<OrderEntry onConfirm={jest.fn()} />)
 
-    await user.click(cherriesCheckbox)
-    expect(total).toHaveTextContent('2.00')
+      const total = screen.getByRole('heading', {name: /grand total/i})
+      const cherriesCheckbox = await screen.findByRole('checkbox', {
+        name: /cherries/i,
+      })
+      const chocolateInput = await screen.findByRole('spinbutton', {
+        name: 'Chocolate',
+      })
+
+      await user.clear(chocolateInput)
+      await user.click(cherriesCheckbox)
+      await user.type(chocolateInput, '2')
+      expect(total).toHaveTextContent('5.50')
+    })
+
+    test('updates properly if option is removed', async () => {
+      const user = userEvent.setup()
+      render(<OrderEntry onConfirm={jest.fn()} />)
+
+      const total = screen.getByRole('heading', {name: /grand total/i})
+      const chocolateInput = await screen.findByRole('spinbutton', {
+        name: 'Chocolate',
+      })
+      const cherriesCheckbox = await screen.findByRole('checkbox', {
+        name: /cherries/i,
+      })
+
+      await user.click(cherriesCheckbox)
+      await user.clear(chocolateInput)
+      await user.type(chocolateInput, '1')
+      expect(total).toHaveTextContent('3.50')
+
+      await user.click(cherriesCheckbox)
+      expect(total).toHaveTextContent('2.00')
+    })
   })
 })

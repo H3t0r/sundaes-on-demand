@@ -23,12 +23,16 @@ function OrderSummary(props: Props) {
           </li>
         ))}
       </ul>
-      <h2>Toppings: {formatCurrency(totals.toppings)}</h2>
-      <ul>
-        {toppings.map(key => (
-          <li key={key}>{key}</li>
-        ))}
-      </ul>
+      {totals.toppings > 0 && (
+        <>
+          <h2>Toppings: {formatCurrency(totals.toppings)}</h2>
+          <ul>
+            {toppings.map(key => (
+              <li key={key}>{key}</li>
+            ))}
+          </ul>
+        </>
+      )}
       <h2>Total: {formatCurrency(totals.scoops + totals.toppings)}</h2>
       <SummaryForm onConfirm={props.onConfirm} />
     </div>

@@ -76,4 +76,34 @@ describe('Options', () => {
     expect(hotFudgeCheckbox).not.toBeChecked()
     expect(subtotal).toHaveTextContent('1.50')
   })
+
+  test('Do not update scoops total for invalid input', async () => {
+    const user = userEvent.setup()
+    render(<Options type="scoops" />)
+
+    const subtotal = screen.getByRole('heading', {name: /scoops total/i})
+    const chocolateInput = await screen.findByRole('spinbutton', {
+      name: 'Chocolate',
+    })
+    const vanillaInput = await screen.findByRole('spinbutton', {
+      name: 'Vanilla',
+    })
+
+    expect(subtotal).toHaveTextContent('0.00')
+
+    await user.clear(chocolateInput)
+    await user.type(chocolateInput, '-1')
+
+    expect(subtotal).toHaveTextContent('0.00')
+
+    await user.clear(vanillaInput)
+    await user.type(vanillaInput, '1')
+
+    expect(subtotal).toHaveTextContent('2.00')
+
+    await user.clear(chocolateInput)
+    await user.type(chocolateInput, '1')
+
+    expect(subtotal).toHaveTextContent('4.00')
+  })
 })

@@ -5,6 +5,7 @@ import React from 'react'
 import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 import {useOrderDetails} from '../../context/OrderDetails'
+import Alert from '@mui/material/Alert'
 
 async function submitOrder(): Promise<{orderNumber: number}> {
   const response = await fetch(`http://localhost:3030/order`, {method: 'post'})
@@ -13,20 +14,41 @@ async function submitOrder(): Promise<{orderNumber: number}> {
 }
 
 interface Props {
-  onConfirm?: React.Dispatch<React.SetStateAction<OrderPhase>>
+  onConfirm: React.Dispatch<React.SetStateAction<OrderPhase>>
 }
 
 function OrderConfirmation(props: Props) {
+  const [error, setError] = React.useState<Error | null>(null)
   const [orderNumber, setOrderNumber] = React.useState<number | null>(null)
   const {resetOrder} = useOrderDetails()
 
   React.useEffect(() => {
     submitOrder()
       .then(response => setOrderNumber(response.orderNumber))
-      .catch(error => {
-        /* */
-      })
+      .catch((error: Error) => setError(error))
   }, [])
+
+  const handleClick = () => {
+    resetOrder()
+    props.onConfirm('inProgress')
+  }
+
+  const renderNewOrderButton = () => (
+    <Button onClick={handleClick} variant="contained">
+      New order
+    </Button>
+  )
+
+  if (error) {
+    return (
+      <>
+        <Alert severity="error">
+          An unexpected error ocurred. Please try again later.
+        </Alert>
+        {renderNewOrderButton()}
+      </>
+    )
+  }
 
   if (!orderNumber) {
     return (
@@ -39,11 +61,6 @@ function OrderConfirmation(props: Props) {
     )
   }
 
-  const handleClick = () => {
-    resetOrder()
-    props.onConfirm?.('inProgress')
-  }
-
   return (
     <>
       <Typography variant="h1">Thank you!</Typography>
@@ -51,9 +68,7 @@ function OrderConfirmation(props: Props) {
       <Typography variant="subtitle1">
         As per our terms and conditions, nothing will happen now
       </Typography>
-      <Button onClick={handleClick} variant="contained">
-        New order
-      </Button>
+      {renderNewOrderButton()}
     </>
   )
 }

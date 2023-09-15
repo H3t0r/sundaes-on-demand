@@ -1,6 +1,9 @@
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
 import TextField from '@mui/material/TextField'
-import {useOrderDetails} from '../../context/OrderDetails'
 import * as React from 'react'
+import {useOrderDetails} from '../../context/OrderDetails'
 
 interface Props {
   imagePath: string
@@ -17,18 +20,26 @@ function ScoopOption({imagePath, name}: Props) {
     updateOptionCount(name, parseInt(value), 'scoops')
   }
   return (
-    <div>
-      <img alt={`${name} scoop`} src={`http://localhost:3030/${imagePath}`} />
-      <TextField
-        defaultValue={0}
-        error={error}
-        inputProps={{max: 10, min: 0}}
-        label={name}
-        onChange={handleChange}
-        size="small"
-        type="number"
+    <Card sx={{minWidth: 275}}>
+      <CardMedia
+        alt={`${name} scoop`}
+        component="img"
+        src={`http://localhost:3030/${imagePath}`}
+        sx={{height: 150}}
       />
-    </div>
+      <CardContent>
+        <TextField
+          defaultValue={0}
+          error={error}
+          fullWidth
+          inputProps={{max: 10, min: 0}}
+          label={name}
+          onChange={handleChange}
+          size="small"
+          type="number"
+        />
+      </CardContent>
+    </Card>
   )
 }
 

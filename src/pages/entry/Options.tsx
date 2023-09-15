@@ -8,6 +8,8 @@ import {OptionType} from '../../types'
 import {formatCurrency} from '../../utilities'
 import ScoopOption from './ScoopOption'
 import ToppingOption from './ToppingOption'
+import Chip from '@mui/material/Chip'
+import Stack from '@mui/material/Stack'
 
 type Option = {imagePath: string; name: string}
 
@@ -52,12 +54,15 @@ function Options({type}: Props) {
       <Typography gutterBottom variant="h3">
         {title}
       </Typography>
-      <Typography gutterBottom variant="subtitle1">
-        {formatCurrency(PRICE_PER_ITEM[type])} each
-      </Typography>
-      <Typography gutterBottom variant="subtitle1">
-        {title} total: {formatCurrency(totals[type])}
-      </Typography>
+      <Stack direction="row" justifyContent="space-between" mb={2}>
+        <Chip
+          color="secondary"
+          label={`${formatCurrency(PRICE_PER_ITEM[type])} each`}
+        />
+        <Typography gutterBottom variant="subtitle1">
+          {title} total: {formatCurrency(totals[type])}
+        </Typography>
+      </Stack>
       <Grid container spacing={2}>
         {options.map(option => (
           <Grid item key={option.name}>

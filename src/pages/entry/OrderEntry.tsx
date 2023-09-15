@@ -14,6 +14,7 @@ function OrderEntry(props: Props) {
 
   return (
     <>
+      <Typography variant="h2">Design Your Sundae!</Typography>
       <Options type="scoops" />
       <Options type="toppings" />
       <Typography variant="h2">

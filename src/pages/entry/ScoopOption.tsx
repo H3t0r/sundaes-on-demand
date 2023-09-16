@@ -19,13 +19,14 @@ function ScoopOption({imagePath, name}: Props) {
     setError(!validity.valid)
     updateOptionCount(name, parseInt(value), 'scoops')
   }
+
   return (
-    <Card sx={{minWidth: 275}}>
+    <Card sx={{minWidth: 265}}>
       <CardMedia
         alt={`${name} scoop`}
         component="img"
         src={`http://localhost:3030/${imagePath}`}
-        sx={{height: 150}}
+        sx={{height: 265}}
       />
       <CardContent>
         <TextField

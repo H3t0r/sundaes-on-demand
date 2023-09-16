@@ -1,4 +1,4 @@
-import {render, screen} from '@testing-library/react'
+import {render, screen, within} from '@testing-library/react'
 import App from '../App'
 import userEvent from '@testing-library/user-event'
 
@@ -22,7 +22,7 @@ describe('Order workflow', () => {
     await user.clear(chocolateInput)
     await user.type(chocolateInput, '1')
     await user.clear(vanillaInput)
-    await user.type(vanillaInput, '1')
+    await user.type(vanillaInput, '2')
     await user.click(cherriesCheckbox)
 
     // find and click order button
@@ -31,17 +31,21 @@ describe('Order workflow', () => {
 
     // check summary information based on order
     const summaryHeading = screen.getByRole('heading', {name: 'Order Summary'})
-    const scoopsHeading = screen.getByRole('heading', {name: 'Scoops: $4.00'})
+    const scoopsHeading = screen.getByRole('heading', {name: 'Scoops: $6.00'})
     const toppingsHeading = screen.getByRole('heading', {
       name: 'Toppings: $1.50',
     })
+    const [chocolateItem, vanillaItem, cherriesItem] =
+      screen.getAllByRole('listitem')
 
     expect(summaryHeading).toBeInTheDocument()
     expect(scoopsHeading).toBeInTheDocument()
     expect(toppingsHeading).toBeInTheDocument()
-    expect(screen.getByText('1 Chocolate')).toBeInTheDocument()
-    expect(screen.getByText('1 Vanilla')).toBeInTheDocument()
-    expect(screen.getByText('Cherries')).toBeInTheDocument()
+    expect(within(chocolateItem).getByText(/1/)).toBeInTheDocument()
+    expect(chocolateItem).toHaveTextContent('Chocolate')
+    expect(within(vanillaItem).getByText(/2/)).toBeInTheDocument()
+    expect(vanillaItem).toHaveTextContent('Vanilla')
+    expect(cherriesItem).toHaveTextContent('Cherries')
 
     // accept terms and conditions and click button to confirm order
     const tcCheckbox = screen.getByRole('checkbox', {
@@ -115,11 +119,14 @@ describe('Order workflow', () => {
     const toppingsHeading = screen.queryByRole('heading', {
       name: /toppings/i,
     })
+    const [chocolateItem, vanillaItem] = screen.getAllByRole('listitem')
 
     expect(summaryHeading).toBeInTheDocument()
     expect(scoopsHeading).toBeInTheDocument()
-    expect(screen.getByText('1 Chocolate')).toBeInTheDocument()
-    expect(screen.getByText('1 Vanilla')).toBeInTheDocument()
+    expect(within(chocolateItem).getByText(/1/)).toBeInTheDocument()
+    expect(chocolateItem).toHaveTextContent('Chocolate')
+    expect(within(vanillaItem).getByText(/1/)).toBeInTheDocument()
+    expect(vanillaItem).toHaveTextContent('Vanilla')
     expect(toppingsHeading).not.toBeInTheDocument()
   })
 
@@ -156,10 +163,12 @@ describe('Order workflow', () => {
     const toppingsHeading = screen.queryByRole('heading', {
       name: /toppings/i,
     })
+    const chocolateItem = screen.getByRole('listitem')
 
     expect(summaryHeading).toBeInTheDocument()
     expect(scoopsHeading).toBeInTheDocument()
-    expect(screen.getByText('1 Chocolate')).toBeInTheDocument()
+    expect(within(chocolateItem).getByText(/1/)).toBeInTheDocument()
+    expect(chocolateItem).toHaveTextContent('Chocolate')
     expect(toppingsHeading).not.toBeInTheDocument()
   })
 })

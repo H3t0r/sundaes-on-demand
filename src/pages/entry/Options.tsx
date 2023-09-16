@@ -1,5 +1,9 @@
 import Alert from '@mui/material/Alert'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
+import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import {PRICE_PER_ITEM} from '../../constants'
@@ -8,8 +12,6 @@ import {OptionType} from '../../types'
 import {formatCurrency} from '../../utilities'
 import ScoopOption from './ScoopOption'
 import ToppingOption from './ToppingOption'
-import Chip from '@mui/material/Chip'
-import Stack from '@mui/material/Stack'
 
 type Option = {imagePath: string; name: string}
 
@@ -50,27 +52,29 @@ function Options({type}: Props) {
   const title = type[0].toUpperCase() + type.slice(1).toLowerCase()
 
   return (
-    <>
-      <Typography gutterBottom variant="h3">
-        {title}
-      </Typography>
-      <Stack direction="row" justifyContent="space-between" mb={2}>
-        <Chip
-          color="secondary"
-          label={`${formatCurrency(PRICE_PER_ITEM[type])} each`}
-        />
-        <Typography gutterBottom variant="subtitle1">
-          {title} total: {formatCurrency(totals[type])}
+    <Card variant="outlined">
+      <CardContent>
+        <Typography gutterBottom variant="h3">
+          {title}
         </Typography>
-      </Stack>
-      <Grid container spacing={2}>
-        {options.map(option => (
-          <Grid item key={option.name}>
-            <Option imagePath={option.imagePath} name={option.name} />
-          </Grid>
-        ))}
-      </Grid>
-    </>
+        <Stack direction="row" justifyContent="space-between" mb={2}>
+          <Typography gutterBottom variant="subtitle1">
+            {title} total: {formatCurrency(totals[type])}
+          </Typography>
+          <Chip
+            color="secondary"
+            label={`${formatCurrency(PRICE_PER_ITEM[type])} each`}
+          />
+        </Stack>
+        <Grid container spacing={2}>
+          {options.map(option => (
+            <Grid item key={option.name}>
+              <Option imagePath={option.imagePath} name={option.name} />
+            </Grid>
+          ))}
+        </Grid>
+      </CardContent>
+    </Card>
   )
 }
 

@@ -37,7 +37,7 @@ function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <Container>
+      <Container sx={{marginY: 2}}>
         <OrderDetailsProvider>{renderOrderPhase()}</OrderDetailsProvider>
       </Container>
     </ThemeProvider>

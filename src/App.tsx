@@ -11,12 +11,7 @@ import * as React from 'react'
 import OrderSummary from './pages/summary/OrderSummary'
 import {OrderPhase} from './types'
 import OrderConfirmation from './pages/confirmation/OrderConfirmation'
-
-const defaultTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-})
+import theme from './theme'
 
 function App() {
   const [orderPhase, setOrderPhase] = React.useState<OrderPhase>('inProgress')
@@ -35,7 +30,7 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container sx={{marginY: 2}}>
         <OrderDetailsProvider>{renderOrderPhase()}</OrderDetailsProvider>

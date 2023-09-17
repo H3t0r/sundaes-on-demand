@@ -4,6 +4,7 @@ import {OrderPhase} from '../../types'
 import {formatCurrency} from '../../utilities'
 import SummaryForm from './SummaryForm'
 import IcecreamIcon from '@mui/icons-material/Icecream'
+import RiceBowlIcon from '@mui/icons-material/RiceBowl'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
@@ -32,32 +33,39 @@ function OrderSummary(props: Props) {
             Scoops: {formatCurrency(totals.scoops)}
           </Typography>
           <List>
-            {scoops.map(([key, value]) => (
-              <ListItem key={key}>
+            {scoops.map(([name, count]) => (
+              <ListItem key={name}>
                 <ListItemIcon>
-                  <Badge badgeContent={value} color="info">
+                  <Badge badgeContent={count} color="info">
                     <IcecreamIcon />
                   </Badge>
                 </ListItemIcon>
-                <ListItemText primary={key} />
+                <ListItemText primary={name} />
               </ListItem>
             ))}
           </List>
+        </CardContent>
+        <CardContent>
           {totals.toppings > 0 && (
             <>
               <Typography variant="h4">
                 Toppings: {formatCurrency(totals.toppings)}
               </Typography>
               <List>
-                {toppings.map(key => (
-                  <ListItem key={key}>{key}</ListItem>
+                {toppings.map(name => (
+                  <ListItem key={name}>
+                    <ListItemIcon>
+                      <RiceBowlIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={name} />
+                  </ListItem>
                 ))}
               </List>
             </>
           )}
         </CardContent>
       </Card>
-      <Typography variant="h3">
+      <Typography variant="h3" my={2}>
         Total: {formatCurrency(totals.scoops + totals.toppings)}
       </Typography>
       <SummaryForm onConfirm={props.onConfirm} />

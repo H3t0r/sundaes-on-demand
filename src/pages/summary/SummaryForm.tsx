@@ -6,6 +6,7 @@ import Popover from '@mui/material/Popover'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import {OrderPhase} from '../../types'
+import theme from '../../theme'
 
 interface Props {
   onConfirm?: React.Dispatch<React.SetStateAction<OrderPhase>>
@@ -23,15 +24,14 @@ function SummaryForm(props: Props) {
 
   return (
     <>
-      <FormGroup
-        aria-haspopup="true"
-        aria-owns={open ? 'mouse-over-popover' : undefined}
-        onMouseEnter={handlePopoverOpen}
-        onMouseLeave={handlePopoverClose}
-      >
+      <FormGroup row>
         <FormControlLabel
+          aria-haspopup="true"
+          aria-owns={open ? 'mouse-over-popover' : undefined}
           control={<Checkbox onClick={toggleButton} />}
           label="I agree to the Terms and Conditions"
+          onMouseEnter={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}
         />
       </FormGroup>
       <Popover
@@ -43,6 +43,14 @@ function SummaryForm(props: Props) {
         open={open}
         sx={{pointerEvents: 'none'}}
         transformOrigin={{vertical: 'top', horizontal: 'left'}}
+        slotProps={{
+          paper: {
+            sx: {
+              color: theme.palette.text.primary,
+              backgroundColor: theme.palette.info.dark,
+            },
+          },
+        }}
       >
         <Typography sx={{p: 1}}>
           No ice cream will actually be delivered
@@ -51,6 +59,7 @@ function SummaryForm(props: Props) {
       <Button
         disabled={isDisabled}
         onClick={() => props.onConfirm?.('completed')}
+        size="large"
         variant="contained"
       >
         Confirm Order

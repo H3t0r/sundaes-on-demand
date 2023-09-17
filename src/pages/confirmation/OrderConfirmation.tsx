@@ -6,6 +6,8 @@ import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 import {useOrderDetails} from '../../context/OrderDetails'
 import Alert from '@mui/material/Alert'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
 
 async function submitOrder(): Promise<{orderNumber: number}> {
   const response = await fetch(`http://localhost:3030/order`, {method: 'post'})
@@ -62,14 +64,20 @@ function OrderConfirmation(props: Props) {
   }
 
   return (
-    <>
-      <Typography variant="h1">Thank you!</Typography>
-      <Typography variant="h2">Your order number is: {orderNumber}</Typography>
-      <Typography variant="subtitle1">
-        As per our terms and conditions, nothing will happen now
-      </Typography>
-      {renderNewOrderButton()}
-    </>
+    <Card>
+      <CardContent sx={{textAlign: 'center'}}>
+        <Typography variant="h2" mb={4}>
+          Thank you!
+        </Typography>
+        <Typography variant="h4" mb={4}>
+          Your order number is: {orderNumber}
+        </Typography>
+        <Typography variant="subtitle1" mb={4}>
+          As per our terms and conditions, nothing will happen now
+        </Typography>
+        {renderNewOrderButton()}
+      </CardContent>
+    </Card>
   )
 }
 
